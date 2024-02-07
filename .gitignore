@@ -30,3 +30,5 @@
 *.exe
 *.out
 *.app
+/Laboratory-work-2/.vs/Laboratory-work-2
+/.vs/Laboratory/v17
