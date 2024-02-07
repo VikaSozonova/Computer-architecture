@@ -85,7 +85,11 @@ struct Elem2
 
 void InsertAtTail(Elem2*& head, string name, string work)
 {
-
+	Elem2* newNode = head;
+	head = new Elem2;
+	head->name = name;
+	head->work = work;
+	head->next = newNode;
 }
 
 int main()
