@@ -85,12 +85,80 @@ struct Elem2
 
 void InsertAtTail(Elem2*& head, string name, string work)
 {
-	Elem2* newNode = head;
-	head = new Elem2;
-	head->name = name;
-	head->work = work;
-	head->next = newNode;
+	Elem2* newNode = new Elem2;
+	newNode->name = name;
+	newNode->work = work;
+	newNode->next = nullptr;
+	if (head == nullptr)
+	{
+		head = newNode;
+	}
+	else
+	{
+		Elem2* temp = head;
+		while (temp->next != nullptr)
+		{
+			temp = temp->next;
+		}
+		temp->next = newNode;
+	}
 }
+
+void BrListFromFirst(Elem2* head) // Просмотр списка с головы к концу
+{
+	while (head != nullptr)
+	{
+		cout << "Имя: " << head->name << " Должность: " << head->work << endl;
+		head = head->next;
+	}
+}
+
+void BrListFromEnd(Elem2* head) // Просмотр списка с конца к голове
+{
+	if (head != nullptr)
+	{
+		BrListFromEnd(head->next);
+		cout << "Имя: " << head->name << " Должность: " << head->work << endl;
+	}
+}
+
+int Count(Elem2* head, string work) // Поиск элементов с заданным значением и подсчет их количества
+{
+	int count = 0;
+	Elem2* current = head;
+	while (current != nullptr)
+	{
+		if (current->work == work)
+		{
+			count++;
+		}
+		current = current->next;
+	}
+	return count;
+}
+
+void Delete(Elem2* head, string work) //Удаление элемента с заданным значением (или всех элементов с заданным значением)
+{
+	Elem2* current = head;
+	Elem2* prev = nullptr;
+
+	while (current != nullptr && current->work != work)
+	{
+		prev = current;
+		current = current->next;
+	}
+	if (prev == nullptr) // Если удаляемый элемент - голова списка
+	{
+		head = current->next;
+	}
+	else
+	{
+		prev->next = current->next;
+	}
+	delete current;
+	std::cout << "Элемент удален" << endl;
+}
+
 
 int main()
 {
@@ -109,7 +177,8 @@ int main()
 	switch (i)
 	{
 	case '1':
-		Elem * head = nullptr;
+	{
+		Elem* head = nullptr;
 		//std::cout << "Введите количество элементов в списке" << endl;
 		//int n;
 		//std::cin >> n;
@@ -163,9 +232,49 @@ int main()
 		else
 			std::cout << "Ничего не изменилось" << endl;
 		break;
+	}
 	case '2':
+	{
+		Elem2* head = nullptr;
+		InsertAtTail(head, "John", "Programmer");
+		InsertAtTail(head, "Mike", "Scientist");
+		InsertAtTail(head, "Mary", "Florist");
+		InsertAtTail(head, "John", "Gardener");
+		InsertAtTail(head, "Rose", "Actriss");
+		InsertAtTail(head, "Ann", "Florist");
+		InsertAtTail(head, "Robert", "Programmer");
+		InsertAtTail(head, "Victor", "Builder");
+		InsertAtTail(head, "Monica", "Programmer");
+		InsertAtTail(head, "Joseph", "Pastor");
+		std::cout << endl;
+		BrListFromFirst(head);
+		std::cout << endl;
+		BrListFromEnd(head);
+		std::cout << endl;
 
+		std::cout << "Введите нужную для поиска профессию: ";
+		std::cin >> work;
+		//work = "Gardener"
+		std::cout << Count(head, work) << endl;
+		std::cout << endl;
+
+		std::cout << "Введите нужную для удаления профессию: ";
+		std::cin >> work;
+		//work = "Florist"
+		int k = Count(head, work);
+		if (k != 0)
+		{
+			for (int j = 0; j < k; j++)
+				Delete(head, work);
+			std::cout << endl;
+			BrListFromFirst(head);
+			std::cout << endl;
+			BrListFromEnd(head);
+		}
+		else
+			std::cout << "Ничего не изменилось" << endl;
 		break;
+	}
 	}
 
 }
