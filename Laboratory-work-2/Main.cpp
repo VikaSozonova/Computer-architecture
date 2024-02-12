@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <windows.h>
 using namespace std;
+#pragma region LIFO
 
 struct Elem
 {
@@ -75,6 +76,10 @@ void Delete(Elem* head, string work) //Удаление элемента с заданным значением (и
 	delete current;
 	std::cout << "Элемент удален" << endl;
 }
+
+#pragma endregion
+
+#pragma region FIFO
 
 struct Elem2
 {
@@ -159,6 +164,97 @@ void Delete(Elem2* head, string work) //Удаление элемента с заданным значением (
 	std::cout << "Элемент удален" << endl;
 }
 
+#pragma endregion
+
+#pragma region Sorted
+
+struct SortedElem
+{
+	string name;
+	string work;
+	SortedElem* next;
+};
+
+void InsertSorted(SortedElem*& head, string name, string work)
+{
+	SortedElem* newNode = new SortedElem;
+	newNode->name = name;
+	newNode->work = work;
+	newNode->next = nullptr;
+
+	if (head == nullptr || name < head->name)
+	{
+		newNode->next = head;
+		head = newNode;
+	}
+	else
+	{
+		SortedElem* current = head;
+		while (current->next != nullptr && current->next->name < name)
+		{
+			current = current->next;
+		}
+		newNode->next = current->next;
+		current->next = newNode;
+	}
+}
+
+void BrListFromFirst(SortedElem*& head)
+{
+	while (head != nullptr)
+	{
+		cout << "Имя: " << head->name << " Должность: " << head->work << endl;
+		head = head->next;
+	}
+}
+
+void BrListFromEnd(SortedElem*& head)
+{
+	if (head != nullptr)
+	{
+		BrListFromEnd(head->next);
+		cout << "Имя: " << head->name << " Должность: " << head->work << endl;
+	}
+}
+
+int Count(SortedElem*& head, string name)
+{
+	int count = 0;
+	SortedElem* current = head;
+	while (current != nullptr)
+	{
+		if (current->name == name)
+		{
+			count++;
+		}
+		current = current->next;
+	}
+	return count;
+}
+
+void Delete(SortedElem*& head, string name)
+{
+	SortedElem* current = head;
+	SortedElem* prev = nullptr;
+	while (current != nullptr && current->name != name)
+	{
+		prev = current;
+		current = current->next;
+	}
+	if (prev == nullptr)
+	{
+		head = current->next;
+
+	}
+	else
+	{
+		prev->next = current->next;
+	}
+	delete current;
+	std::cout << "Элемент удален" << endl;
+}
+
+#pragma endregion
 
 int main()
 {
@@ -273,6 +369,49 @@ int main()
 		}
 		else
 			std::cout << "Ничего не изменилось" << endl;
+		break;
+	}
+	case '3':
+	{
+		SortedElem* head = nullptr;
+		InsertSorted(head, "John", "Programmer");
+		InsertSorted(head, "Mike", "Scientist");
+		InsertSorted(head, "Mary", "Florist");
+		InsertSorted(head, "John", "Gardener");
+		InsertSorted(head, "Rose", "Actriss");
+		InsertSorted(head, "Ann", "Florist");
+		InsertSorted(head, "Robert", "Programmer");
+		InsertSorted(head, "Victor", "Builder");
+		InsertSorted(head, "Monica", "Programmer");
+		InsertSorted(head, "Joseph", "Pastor");
+		std::cout << endl;
+		BrListFromFirst(head);
+		std::cout << endl;
+		BrListFromEnd(head);
+		std::cout << endl;
+
+		std::cout << "Введите нужное для поиска имя: ";
+		std::cin >> name;
+		//name = "John"
+		std::cout << Count(head, name) << endl;
+		std::cout << endl;
+
+		std::cout << "Введите нужное для удаления имя: ";
+		std::cin >> name;
+		//name = "Mike"
+		int k = Count(head, name);
+		if (k != 0)
+		{
+			for (int j = 0; j < k; j++)
+				Delete(head, name);
+			std::cout << endl;
+			BrListFromFirst(head);
+			std::cout << endl;
+			BrListFromEnd(head);
+		}
+		else
+			std::cout << "Ничего не изменилось" << endl;
+
 		break;
 	}
 	}
